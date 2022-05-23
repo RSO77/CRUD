@@ -62,7 +62,7 @@ class UserController {
 
 
 
-  async knockOnFriends(req, res) {
+  async requestUserFriend(req, res) {
     try {
       const { id } = req.params;
       const { _id } = req.body;
@@ -71,13 +71,13 @@ class UserController {
       }
 
       const user = await User.findById(id);
-      if (user.request_id.includes(_id)) {
+      if (user.requestId.includes(_id)) {
         res.status(400).json({ message: "Вы уже подали заявку" });
-      }else if (user.friends_id.includes(_id)) {
+      }else if (user.friendIds.includes(_id)) {
         res.status(400).json({ message: "Вы уже в друзьях" });
       }
 
-      user.request_id.push(_id);
+      user.requestId.push(_id);
       const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
       return res.json(updatedUser);
     } catch (e) {
@@ -85,18 +85,18 @@ class UserController {
     }
   }
 
-  async addUser(req, res) {
+  async addUserFrends(req, res) {
     try {
       const { id1, id2 } = req.params;
       if (!id1 && !id2 && (id1 != id2)) {
         res.status(400).json({ message: "Укажите id!" });
       }
       const user = await User.findById(id1);
-      if (user.friends_id.includes(id2)) {
+      if (user.friendIds.includes(id2)) {
         res.status(400).json({ message: "Вы уже в друзьях" });
       }
-      user.friends_id.push(id2);
-      user.request_id.splice(user.request_id.indexOf(id2), 1)
+      user.friendIds.push(id2);
+      user.requestId.splice(user.requestId.indexOf(id2), 1)
       
       const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
       return res.json(updatedUser);
@@ -105,18 +105,18 @@ class UserController {
     }
   }
 
-  async deleteUser(req, res) {
+  async removeUserFriends(req, res) {
     try {
       const { id1, id2 } = req.params;
       if (!id1 && !id2) {
         res.status(400).json({ message: "Укажите id!" });
       }
       const user = await User.findById(id1);
-      if(user.request_id.includes(id2)){
-        user.request_id.splice(user.request_id.indexOf(id2), 1)
+      if(user.requestId.includes(id2)){
+        user.requestId.splice(user.requestId.indexOf(id2), 1)
       }
-      if(user.friends_id.includes(id2)){
-        user.friends_id.splice(user.friends_id.indexOf(id2), 1)
+      if(user.friendIds.includes(id2)){
+        user.friendIds.splice(user.friendIds.indexOf(id2), 1)
       }
       const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
       return res.json(user);
@@ -129,17 +129,17 @@ class UserController {
     try {
       const { id } = req.params;
       const user = await User.findById(id);
-      return res.json(user.friends_id);
+      return res.json(user.friendIds);
       } catch (e) {
         res.status(500).json(e);
       }
   }
 
-  async listRequest(req, res) {
+  async showUserRequest(req, res) {
     try {
       const { id } = req.params;
       const user = await User.findById(id);
-      return res.json(user.request_id);
+      return res.json(user.requestId);
       } catch (e) {
         res.status(500).json(e);
       }

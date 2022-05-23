@@ -9,13 +9,11 @@ router.get('/user/:id', UserController.getOne)
 router.put('/user', UserController.update)
 router.delete('/user/:id', UserController.delete)
 
-router.put('/user/:id', UserController.knockOnFriends)
-router.put('/user/:id1/:id2', UserController.addUser)
-router.put('/userd/:id1/:id2', UserController.deleteUser)
-router.get('/users-f/:id', UserController.showFriends)
-router.get('/users-r/:id', UserController.listRequest)
-
-// router.post('/knock-on-friends', UserController.knockOnFriends)
+router.put('/user/:id', UserController.requestUserFriend)
+router.put('/user/:id1/:id2', UserController.addUserFrends)
+router.put('/userRemoveFriends/:id1/:id2', UserController.removeUserFriends)
+router.get('/userShowFriends/:id', UserController.showFriends)
+router.get('/usersShowRequest/:id', UserController.showUserRequest)
 
 
 export default router;
