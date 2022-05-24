@@ -3,17 +3,17 @@ import UserController from './UserController.js';
 
 const router = new Router();
 
-router.post('/user', UserController.create)
+router.post('/users', UserController.create)
 router.get('/users', UserController.getAll)
 router.get('/users/:id', UserController.getOne)
-router.put('/user', UserController.update)
-router.delete('/user/:id', UserController.delete)
+router.put('/users', UserController.update)
+router.delete('/users/:id', UserController.delete)
 
-router.post('/knock-on-friends', UserController.knockOnFriends)
-router.get('/users-friends', UserController.showFriends)
-router.get('/wish-list', UserController.wishList)
-router.put('/user-add/:id', UserController.addUser)
-router.delete('/user-delete/:id', UserController.delete)
+router.put('/users/add/:userId/:newUserId', UserController.addUserFriends)
+router.put('/users/accept/:userId/:newUserId', UserController.userAcceptFriend)
+router.put('/users/remove/:userId/:newUserId', UserController.removeUserFriends)
+router.get('/users/showFriends/:userId', UserController.showFriends)
+router.get('/users/showRequest/:userId', UserController.showUserRequest)
 
 
 export default router;
