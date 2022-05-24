@@ -62,22 +62,21 @@ class UserController {
 
 
 
-  async requestUserFriend(req, res) {
+  async addUserFriends(req, res) {
     try {
-      const { id } = req.params;
-      const { _id } = req.body;
-      if (!id && _id2 && (id1 != id2)) {
+      const { userId, newUserId } = req.params;
+      if (!userId && newUserId && (userId != newUserId)) {
         res.status(400).json({ message: "Укажите id!" });
       }
 
-      const user = await User.findById(id);
-      if (user.requestId.includes(_id)) {
+      const user = await User.findById(userId);
+      if (user.requestId.includes(newUserId)) {
         res.status(400).json({ message: "Вы уже подали заявку" });
-      }else if (user.friendIds.includes(_id)) {
+      }else if (user.friendIds.includes(newUserId)) {
         res.status(400).json({ message: "Вы уже в друзьях" });
       }
 
-      user.requestId.push(_id);
+      user.requestId.push(newUserId);
       const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
       return res.json(updatedUser);
     } catch (e) {
@@ -85,18 +84,18 @@ class UserController {
     }
   }
 
-  async addUserFrends(req, res) {
+  async userAcceptFriend(req, res) {
     try {
-      const { id1, id2 } = req.params;
-      if (!id1 && !id2 && (id1 != id2)) {
+      const { userId, newUserId } = req.params;
+      if (!userId && !newUserId && (userId != newUserId)) {
         res.status(400).json({ message: "Укажите id!" });
       }
-      const user = await User.findById(id1);
-      if (user.friendIds.includes(id2)) {
+      const user = await User.findById(userId);
+      if (user.friendIds.includes(newUserId)) {
         res.status(400).json({ message: "Вы уже в друзьях" });
       }
-      user.friendIds.push(id2);
-      user.requestId.splice(user.requestId.indexOf(id2), 1)
+      user.friendIds.push(newUserId);
+      user.requestId.splice(user.requestId.indexOf(newUserId), 1)
       
       const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
       return res.json(updatedUser);
@@ -107,16 +106,16 @@ class UserController {
 
   async removeUserFriends(req, res) {
     try {
-      const { id1, id2 } = req.params;
-      if (!id1 && !id2) {
+      const { userId, newUserId } = req.params;
+      if (!userId && !newUserId) {
         res.status(400).json({ message: "Укажите id!" });
       }
-      const user = await User.findById(id1);
-      if(user.requestId.includes(id2)){
-        user.requestId.splice(user.requestId.indexOf(id2), 1)
+      const user = await User.findById(userId);
+      if(user.requestId.includes(newUserId)){
+        user.requestId.splice(user.requestId.indexOf(newUserId), 1)
       }
-      if(user.friendIds.includes(id2)){
-        user.friendIds.splice(user.friendIds.indexOf(id2), 1)
+      if(user.friendIds.includes(newUserId)){
+        user.friendIds.splice(user.friendIds.indexOf(newUserId), 1)
       }
       const updatedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
       return res.json(user);
@@ -127,8 +126,8 @@ class UserController {
 
   async showFriends(req, res) {
     try {
-      const { id } = req.params;
-      const user = await User.findById(id);
+      const { userId } = req.params;
+      const user = await User.findById(userId);
       return res.json(user.friendIds);
       } catch (e) {
         res.status(500).json(e);
@@ -137,8 +136,8 @@ class UserController {
 
   async showUserRequest(req, res) {
     try {
-      const { id } = req.params;
-      const user = await User.findById(id);
+      const { userId } = req.params;
+      const user = await User.findById(userId);
       return res.json(user.requestId);
       } catch (e) {
         res.status(500).json(e);
